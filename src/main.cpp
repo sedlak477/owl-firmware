@@ -93,7 +93,7 @@ void setup() {
   motor.velocity_limit = 3.14;
 
   // control loop settings
-  motor.LPF_velocity.Tf = 1.0 / (motor.velocity_limit * 25);
+  motor.LPF_velocity.Tf = 1.0 / (motor.velocity_limit * 20);
 
   // initialise motor
   if(!motor.init()){
