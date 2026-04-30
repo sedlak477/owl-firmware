@@ -14,5 +14,5 @@ Uses the [SimpleFOC](https://simplefoc.com/) library.
 
 ## Related repositories
 
-[owl-ranger](https://github.com/sedlak477/owl-ranger): A script for stepping through some orientations and recording measurements.
+[owl-ranger](https://github.com/sedlak477/owl-ranger): A script for stepping through some orientations and recording measurements.  
 [pyowl](https://github.com/sedlak477/pyowl): A python library for interacting with the OWL.
