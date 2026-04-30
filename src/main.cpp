@@ -43,11 +43,16 @@ BLDCMotor motor = BLDCMotor(NUM_POLE_PAIRS);
 BLDCDriver6PWM driver = BLDCDriver6PWM(PIN_A_H, PIN_A_L, PIN_B_H, PIN_B_L, PIN_C_H, PIN_C_L, PIN_DRV_ENABLE);
 
 unsigned long beep_until = 0;
+bool goto_active = false;
 
 // commander interface
 Commander command = Commander(Serial);
 void onMotor(char* cmd){ command.motor(&motor, cmd); }
 void doTarget(char* cmd) { command.scalar(&motor.target, cmd); }
+void doGoto(char* cmd) {
+  motor.target = atof(cmd);
+  goto_active = true;
+}
 void printAbsolute(char* cmd) { Serial.println(sensor.getAngle(), 3); }
 void printRaw(char* cmd) { Serial.println(sensor.getMechanicalAngle(), 3); }
 void printStatus(char* cmd) { Serial.println(sensor.getFieldStrength() == 1 ? "TOO LOW" : "OK"); }
@@ -106,6 +111,7 @@ void setup() {
 
   command.add('M', onMotor, "motor settings");
   command.add('T', doTarget, "target angle");
+  command.add('G', doGoto, "goto angle");
   command.add('A', printAbsolute, "print absolute angle");
   command.add('R', printRaw, "print raw angle (between 0 and 2PI)");
   command.add('V', printMotorVoltage, "print motor voltage");
@@ -135,6 +141,12 @@ void loop() {
   if (reset_target_at != 0 && reset_target_at < millis()) {
     reset_target_at = 0;
     motor.move(0);
+  }
+
+  // Goto logic
+  if (goto_active && abs(motor.shaft_velocity) < 0.1 && abs(motor.target - motor.shaft_angle) < 0.003) {
+    goto_active = false;
+    Serial.println(motor.target, command.decimal_places);
   }
 
   motor.loopFOC();
