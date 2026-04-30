@@ -1,3 +1,4 @@
+#include "api/Common.h"
 #include <Arduino.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -57,8 +58,16 @@ void printAbsolute(char* cmd) { Serial.println(sensor.getAngle(), 3); }
 void printRaw(char* cmd) { Serial.println(sensor.getMechanicalAngle(), 3); }
 void printStatus(char* cmd) { Serial.println(sensor.getFieldStrength() == 1 ? "TOO LOW" : "OK"); }
 void printMotorVoltage(char* cmd) { Serial.println(analogRead(PIN_VOLTAGE_SENSE) * 3.3f * SENSE_MULT / 4095.0f, 3); }
-void doLED(char* cmd) { digitalWrite(PIN_USER_LED, atoi(cmd) ? HIGH : LOW); }
-void doBeep(char* cmd) { beep_until = millis() + atoi(cmd); }
+void doLED(char* cmd) {
+  PinStatus pin_status = atoi(cmd) ? HIGH : LOW;
+  digitalWrite(PIN_USER_LED, pin_status);
+  Serial.println(pin_status);
+}
+void doBeep(char* cmd) {
+  int duration = atoi(cmd);
+  beep_until = millis() + duration;
+  Serial.println(duration);
+}
 
 void setup() {
   USB.setProduct("OWL");
