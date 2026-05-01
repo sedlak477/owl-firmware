@@ -1,0 +1,40 @@
+name: Build and Upload Firmware
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # PlatformIO runs on Python
+
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install platformio
+
+      - name: Build Firmware with PlatformIO
+        run: pio run 
+
+      - name: Rename UF2 file
+        run: |
+          # Find the uf2 file. Assuming one environment is built.
+          UF2_FILE=$(find .pio/build -name "firmware.uf2" | head -n 1)
+          cp "$UF2_FILE" "owl-firmware-${{ github.event.release.tag_name }}.uf2"
+
+      - name: Upload Artifact to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: owl-firmware-${{ github.event.release.tag_name }}.uf2
