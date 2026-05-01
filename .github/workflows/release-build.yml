@@ -18,7 +18,17 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' # PlatformIO runs on Python
+          python-version: '3.11'
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            .pio
+          key: ${{ runner.os }}-platformio-${{ hashFiles('**/platformio.ini') }}
+          restore-keys: |
+            ${{ runner.os }}-platformio-
 
       - name: Install PlatformIO
         run: |
@@ -30,7 +40,6 @@ jobs:
 
       - name: Rename UF2 file
         run: |
-          # Find the uf2 file. Assuming one environment is built.
           UF2_FILE=$(find .pio/build -name "firmware.uf2" | head -n 1)
           cp "$UF2_FILE" "owl-firmware-${{ github.event.release.tag_name }}.uf2"
 
