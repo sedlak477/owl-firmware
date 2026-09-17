@@ -12,7 +12,9 @@ Uses the [SimpleFOC](https://simplefoc.com/) library.
 1. Drop the firmware image into the folder.
 1. After a short time, the controller will reboot into the new firmware.
 
-## Related repositories
+## Related resources
 
 [owl-ranger](https://github.com/sedlak477/owl-ranger): A script for stepping through some orientations and recording measurements.  
-[pyowl](https://github.com/sedlak477/pyowl): A python library for interacting with the OWL.
+[pyowl](https://github.com/sedlak477/pyowl): A python library for interacting with the OWL.  
+[owl-hardware](https://github.com/sedlak477/owl-hardware): Hardware design files for the OWL platform.  
+[Dataset](https://doi.org/10.3217/kh254-z8374): Orientation-diverse BLE Channel Sounding and UWB ranging measurements recorded with the OWL.
